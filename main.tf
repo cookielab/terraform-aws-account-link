@@ -53,11 +53,15 @@ resource "aws_iam_role" "cookielab_api" {
 }
 
 resource "aws_iam_role_policy_attachment" "cookielab_console_ro" {
+  count = var.administrator == true ? 0 : 1
+
   role       = aws_iam_role.cookielab_console.name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "cookielab_api_ro" {
+  count = var.administrator == true ? 0 : 1
+
   role       = aws_iam_role.cookielab_api.name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }

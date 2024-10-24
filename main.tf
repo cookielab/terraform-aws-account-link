@@ -19,23 +19,27 @@ data "aws_iam_policy_document" "cookielab_assume_console" {
     }
   }
 
-  statement {
-    effect = "Allow"
+  dynamic "statement" {
+    for_each = var.assume_from_sso
 
-    sid = "RequireSSOAuthedForAssumeConsole"
-    actions = [
-      "sts:AssumeRole"
-    ]
+    content {
+      effect = "Allow"
 
-    principals {
-      type        = "AWS"
-      identifiers = [var.source_role_arn]
-    }
+      sid = "RequireSSOAuthedForAssumeConsole${statement.key}"
+      actions = [
+        "sts:AssumeRole"
+      ]
 
-    condition {
-      test     = "StringLike"
-      variable = "aws:PrincipalArn"
-      values   = ["arn:aws:iam::${var.source_aws_account_id}:role/aws-reserved/sso.amazonaws.com/${var.source_sso_region}/AWSReservedSSO_${var.source_permission_set_name}_????????????????"]
+      principals {
+        type        = "AWS"
+        identifiers = [var.source_role_arn]
+      }
+
+      condition {
+        test     = "StringLike"
+        variable = "aws:PrincipalArn"
+        values   = ["arn:aws:iam::${statement.value["aws_source_account_id"]}:role/aws-reserved/sso.amazonaws.com/${statement.value["sso_region"]}/AWSReservedSSO_${statement.value["sso_permissions_set_name"]}_????????????????"]
+      }
     }
   }
 }

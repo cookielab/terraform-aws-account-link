@@ -37,20 +37,21 @@ variable "destination_role_name_console" {
   description = "Role name for Console access in destination AWS account"
 }
 
-variable "source_aws_account_id" {
-  type        = string
-  default     = "165786330009"
-  description = "Source AWS account id"
-}
+variable "assume_from_sso" {
+  type = list(object({
+    aws_source_account_id    = string
+    sso_region               = string
+    sso_permissions_set_name = string
+  }))
+  default = []
+  validation {
 
-variable "source_sso_region" {
-  type        = string
-  default     = "eu-west-1"
-  description = "Source sso region for principal"
-}
-
-variable "source_permission_set_name" {
-  type        = string
-  default     = "AdministratorAccess"
-  description = "Source permission set"
+    condition     = alltrue([for sso in var.assume_from_sso : can(regex("^[[:digit:]]{12}", sso.aws_source_account_id))])
+    error_message = "Must be a valid AWS IAM account number."
+  }
+  validation {
+    condition     = alltrue([for sso in var.assume_from_sso : can(regex("[a-z][a-z]-[a-z]+-[1-9]", sso.sso_region))])
+    error_message = "Must be valid AWS Region names."
+  }
+  description = "List of objects containing `aws_source_account_id`, `sso_region` and `sso_permissions_set_name` to be allowed to assume console role"
 }

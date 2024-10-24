@@ -36,3 +36,21 @@ variable "destination_role_name_console" {
   default     = null
   description = "Role name for Console access in destination AWS account"
 }
+
+variable "source_aws_account_id" {
+  type        = string
+  default     = "165786330009"
+  description = "Source AWS account id"
+}
+
+variable "source_sso_region" {
+  type        = string
+  default     = "eu-west-1"
+  description = "Source sso region for principal"
+}
+
+variable "source_permission_set_name" {
+  type        = string
+  default     = "AdministratorAccess"
+  description = "Source permission set"
+}

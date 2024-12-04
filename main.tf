@@ -2,6 +2,7 @@ data "aws_iam_policy_document" "cookielab_assume_console" {
   statement {
     effect = "Allow"
 
+    sid = "RequireMFAForAssumeConsole"
     actions = [
       "sts:AssumeRole"
     ]
@@ -11,10 +12,34 @@ data "aws_iam_policy_document" "cookielab_assume_console" {
       identifiers = [var.source_role_arn]
     }
 
-    condition { # require MFA
+    condition {
       test     = "Bool"
       variable = "aws:MultiFactorAuthPresent"
       values   = ["true"]
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.assume_from_sso
+
+    content {
+      effect = "Allow"
+
+      sid = "RequireSSOAuthedForAssumeConsole${statement.key}"
+      actions = [
+        "sts:AssumeRole"
+      ]
+
+      principals {
+        type        = "AWS"
+        identifiers = [var.source_role_arn]
+      }
+
+      condition {
+        test     = "StringLike"
+        variable = "aws:PrincipalArn"
+        values   = ["arn:aws:iam::${statement.value["aws_source_account_id"]}:role/aws-reserved/sso.amazonaws.com/${statement.value["sso_region"]}/AWSReservedSSO_${statement.value["sso_permissions_set_name"]}_????????????????"]
+      }
     }
   }
 }

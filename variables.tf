@@ -10,13 +10,31 @@ variable "source_role_arn" {
 
 variable "external_id" {
   type        = string
-  description = "External ID for link verification"
+  default     = null
+  description = "External ID for link verification. Required when `api = true`"
+
+  validation {
+    condition     = var.api == false || var.external_id != null
+    error_message = "external_id is required when api is true."
+  }
 }
 
 variable "administrator" {
   type        = bool
   default     = false
   description = "ReadOnly or Administrator Access"
+}
+
+variable "console" {
+  type        = bool
+  default     = true
+  description = "Create a console access role"
+}
+
+variable "api" {
+  type        = bool
+  default     = true
+  description = "Create an API access role"
 }
 
 variable "destination_role_name_prefix" {
@@ -37,6 +55,18 @@ variable "destination_role_name_console" {
   description = "Role name for Console access in destination AWS account"
 }
 
+variable "billing" {
+  type        = bool
+  default     = false
+  description = "Create a billing role with read-only billing console access"
+}
+
+variable "destination_role_name_billing" {
+  type        = string
+  default     = null
+  description = "Role name for billing access in destination AWS account"
+}
+
 variable "assume_from_sso" {
   type = list(object({
     aws_source_account_id    = string
@@ -53,5 +83,5 @@ variable "assume_from_sso" {
     condition     = alltrue([for sso in var.assume_from_sso : can(regex("[a-z][a-z]-[a-z]+-[1-9]", sso.sso_region))])
     error_message = "Must be valid AWS Region names."
   }
-  description = "List of objects containing `aws_source_account_id`, `sso_region` and `sso_permissions_set_name` to be allowed to assume console role"
+  description = "List of objects containing `aws_source_account_id`, `sso_region` and `sso_permissions_set_name` to be allowed to assume console and billing roles"
 }

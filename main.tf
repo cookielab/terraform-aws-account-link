@@ -53,6 +53,8 @@ resource "aws_iam_role" "cookielab_console" {
 }
 
 data "aws_iam_policy_document" "cookielab_assume_api" {
+  count = var.api == true ? 1 : 0
+
   statement {
     effect = "Allow"
 
@@ -78,7 +80,7 @@ resource "aws_iam_role" "cookielab_api" {
 
   name = var.destination_role_name_api == null ? "${var.destination_role_name_prefix}cookielab-api" : var.destination_role_name_api
 
-  assume_role_policy = data.aws_iam_policy_document.cookielab_assume_api.json
+  assume_role_policy = data.aws_iam_policy_document.cookielab_assume_api[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "cookielab_console_ro" {

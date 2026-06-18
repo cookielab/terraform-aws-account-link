@@ -10,7 +10,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.51.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.30.0 |
 
 ## Modules
 
@@ -37,7 +37,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_administrator"></a> [administrator](#input\_administrator) | ReadOnly or Administrator Access | `bool` | `false` | no |
 | <a name="input_api"></a> [api](#input\_api) | Create an API access role | `bool` | `true` | no |
-| <a name="input_assume_from_sso"></a> [assume\_from\_sso](#input\_assume\_from\_sso) | List of objects containing `aws_source_account_id`, `sso_region` and `sso_permissions_set_name` to be allowed to assume console role | <pre>list(object({<br/>    aws_source_account_id    = string<br/>    sso_region               = string<br/>    sso_permissions_set_name = string<br/>  }))</pre> | `[]` | no |
+| <a name="input_assume_from_sso"></a> [assume\_from\_sso](#input\_assume\_from\_sso) | List of objects containing `aws_source_account_id`, `sso_region` and `sso_permissions_set_name` to be allowed to assume console and billing roles | <pre>list(object({<br/>    aws_source_account_id    = string<br/>    sso_region               = string<br/>    sso_permissions_set_name = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_billing"></a> [billing](#input\_billing) | Create a billing role with read-only billing console access | `bool` | `false` | no |
 | <a name="input_console"></a> [console](#input\_console) | Create a console access role | `bool` | `true` | no |
 | <a name="input_destination_role_name_api"></a> [destination\_role\_name\_api](#input\_destination\_role\_name\_api) | Role name for API access in destination AWS account | `string` | `null` | no |

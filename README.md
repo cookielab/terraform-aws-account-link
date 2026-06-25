@@ -37,7 +37,7 @@ No modules.
 | <a name="input_destination_role_name_console"></a> [destination\_role\_name\_console](#input\_destination\_role\_name\_console) | Role name for Console access in destination AWS account | `string` | `null` | no |
 | <a name="input_destination_role_name_prefix"></a> [destination\_role\_name\_prefix](#input\_destination\_role\_name\_prefix) | Prefix for role names in destination AWS account | `string` | `"zzzzz-"` | no |
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | External ID for link verification | `string` | n/a | yes |
-| <a name="input_policy_arns"></a> [policy\_arns](#input\_policy\_arns) | Policy ARNs to attach to the console and API roles. When empty, `administrator` selects AdministratorAccess (true) or ReadOnlyAccess (false). When set, these policies are attached instead. Ignored when `administrator = true` | `list(string)` | `[]` | no |
+| <a name="input_policy_arns"></a> [policy\_arns](#input\_policy\_arns) | Policy ARNs to attach to the console and API roles. Takes precedence over `administrator` when set. When empty, `administrator` selects AdministratorAccess (true) or ReadOnlyAccess (false) | `list(string)` | `[]` | no |
 | <a name="input_source_role_arn"></a> [source\_role\_arn](#input\_source\_role\_arn) | Role ARN in source AWS account | `string` | n/a | yes |
 
 ## Outputs

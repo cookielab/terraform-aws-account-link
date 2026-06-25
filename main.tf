@@ -78,8 +78,8 @@ resource "aws_iam_role" "cookielab_api" {
 }
 
 locals {
-  role_policies = var.administrator ? ["arn:aws:iam::aws:policy/AdministratorAccess"] : (
-    length(var.policy_arns) > 0 ? var.policy_arns : ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
+  role_policies = length(var.policy_arns) > 0 ? var.policy_arns : (
+    var.administrator ? ["arn:aws:iam::aws:policy/AdministratorAccess"] : ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
   )
 }
 

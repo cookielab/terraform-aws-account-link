@@ -22,7 +22,7 @@ variable "administrator" {
 variable "policy_arns" {
   type        = list(string)
   default     = []
-  description = "Policy ARNs to attach to the console and API roles. When empty, `administrator` selects AdministratorAccess (true) or ReadOnlyAccess (false). When set, these policies are attached instead. Ignored when `administrator = true`"
+  description = "Policy ARNs to attach to the console and API roles. Takes precedence over `administrator` when set. When empty, `administrator` selects AdministratorAccess (true) or ReadOnlyAccess (false)"
 }
 
 variable "destination_role_name_prefix" {

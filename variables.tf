@@ -22,7 +22,18 @@ variable "external_id" {
 variable "administrator" {
   type        = bool
   default     = false
-  description = "ReadOnly or Administrator Access"
+  description = "ReadOnly or Administrator Access. Used as fallback for the console/api roles when `policy_arns` is empty"
+}
+
+variable "policy_arns" {
+  type        = list(string)
+  default     = []
+  description = "Policy ARNs to attach to the console and API roles. Takes precedence over `administrator` when set. When empty, `administrator` selects AdministratorAccess (true) or ReadOnlyAccess (false)"
+
+  validation {
+    condition     = alltrue([for arn in var.policy_arns : can(regex("^arn:aws:iam::(aws|[[:digit:]]{12}):policy/.+", arn))])
+    error_message = "Each entry must be a valid IAM policy ARN."
+  }
 }
 
 variable "console" {

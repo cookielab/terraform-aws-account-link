@@ -83,32 +83,24 @@ resource "aws_iam_role" "cookielab_api" {
   assume_role_policy = data.aws_iam_policy_document.cookielab_assume_api[0].json
 }
 
-resource "aws_iam_role_policy_attachment" "cookielab_console_ro" {
-  count = var.console == true && var.administrator == false ? 1 : 0
+locals {
+  role_policies = length(var.policy_arns) > 0 ? var.policy_arns : (
+    var.administrator ? ["arn:aws:iam::aws:policy/AdministratorAccess"] : ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "cookielab_console" {
+  for_each = var.console == true ? toset(local.role_policies) : toset([])
 
   role       = aws_iam_role.cookielab_console[0].name
-  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+  policy_arn = each.value
 }
 
-resource "aws_iam_role_policy_attachment" "cookielab_api_ro" {
-  count = var.api == true && var.administrator == false ? 1 : 0
+resource "aws_iam_role_policy_attachment" "cookielab_api" {
+  for_each = var.api == true ? toset(local.role_policies) : toset([])
 
   role       = aws_iam_role.cookielab_api[0].name
-  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "cookielab_console_admin" {
-  count = var.console == true && var.administrator == true ? 1 : 0
-
-  role       = aws_iam_role.cookielab_console[0].name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "cookielab_api_admin" {
-  count = var.api == true && var.administrator == true ? 1 : 0
-
-  role       = aws_iam_role.cookielab_api[0].name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy_arn = each.value
 }
 
 resource "aws_iam_role" "cookielab_billing" {

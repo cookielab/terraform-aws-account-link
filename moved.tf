@@ -1,3 +1,16 @@
+# Migrate the console/api roles from unindexed addresses to count[0], added
+# with the `console`/`api` toggles.
+
+moved {
+  from = aws_iam_role.cookielab_console
+  to   = aws_iam_role.cookielab_console[0]
+}
+
+moved {
+  from = aws_iam_role.cookielab_api
+  to   = aws_iam_role.cookielab_api[0]
+}
+
 # Migrate the previous count-based ReadOnly/Administrator policy attachments
 # to the new for_each attachments keyed by policy ARN. Whichever attachment
 # actually exists in state (ro or admin, per the `administrator` toggle) is
